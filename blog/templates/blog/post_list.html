@@ -12,7 +12,18 @@
     		<li>
     			<p>Buy nivea cream</p>
     		</li>
-    	</ul>
+    	</ul></body></html></br>
+    	<div>
+		    <h1><a href="/">Django Girls Blog</a></h1>
+		</div>
+
+		{% for post in posts %}
+		    <div>
+		        <p>published: {{ post.published_date }}</p>
+		        <h1><a href="">{{ post.title }}</a></h1>
+		        <p>{{ post.text|linebreaksbr }}</p>
+		    </div>
+		{% endfor %}
        
         
     </body>
