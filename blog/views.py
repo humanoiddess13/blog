@@ -2,12 +2,23 @@ from django.utils import timezone
 from .models import Post
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import PostForm
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
 
 def post_list(request):
-    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-    return render(request, 'blog/post_list.html', {'posts': posts})
+	context = {}
+	all_posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+	current_page = Paginator(all_posts, 10)
+	page = request.GET.get('page')
+	try:
+		context['posts'] = current_page.page(page)  
+	except PageNotAnInteger:
+		context['posts'] = current_page.page(1)
+	except EmptyPage:
+		context['posts'] = current_page.page(current_page.num_pages)
+	return render(request, 'blog/post_list.html', context) 
+		 
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
